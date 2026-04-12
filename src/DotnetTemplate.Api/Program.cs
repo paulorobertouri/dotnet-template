@@ -10,9 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ── JWT settings ──────────────────────────────────────────────────────────────
 var jwtSecret = builder.Configuration["Jwt:Secret"]
+    ?? builder.Configuration["JWT_SECRET"]
     ?? throw new InvalidOperationException("Jwt:Secret is required.");
-var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "dotnet-template";
-var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "dotnet-template";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+    ?? builder.Configuration["JWT_ISSUER"]
+    ?? "dotnet-template";
+var jwtAudience = builder.Configuration["Jwt:Audience"]
+    ?? builder.Configuration["JWT_AUDIENCE"]
+    ?? "dotnet-template";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -38,7 +43,10 @@ builder.Services.AddSingleton<IAuthService>(provider =>
         jwtSecret,
         jwtIssuer,
         jwtAudience,
-        int.Parse(builder.Configuration["Jwt:ExpirationSeconds"] ?? "3600")));
+        int.Parse(
+            builder.Configuration["Jwt:ExpirationSeconds"]
+                ?? builder.Configuration["JWT_EXPIRATION_SECONDS"]
+                ?? "3600")));
 
 builder.Services.AddSingleton<ICustomerRepository, InMemoryCustomerRepository>();
 builder.Services.AddSingleton<ICustomerService, CustomerService>();
@@ -50,11 +58,8 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 // ── Middleware pipeline ───────────────────────────────────────────────────────
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference("/docs");
-}
+app.MapOpenApi();
+app.MapScalarApiReference("/docs");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

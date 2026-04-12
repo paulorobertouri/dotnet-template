@@ -7,7 +7,7 @@ COPY src/DotnetTemplate.Domain/DotnetTemplate.Domain.csproj       src/DotnetTemp
 COPY src/DotnetTemplate.Application/DotnetTemplate.Application.csproj  src/DotnetTemplate.Application/
 COPY src/DotnetTemplate.Api/DotnetTemplate.Api.csproj             src/DotnetTemplate.Api/
 
-RUN dotnet restore DotnetTemplate.sln
+RUN dotnet restore src/DotnetTemplate.Api/DotnetTemplate.Api.csproj
 
 COPY src/ src/
 RUN dotnet publish src/DotnetTemplate.Api/DotnetTemplate.Api.csproj \

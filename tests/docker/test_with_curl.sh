@@ -6,22 +6,45 @@ cd "$(dirname "$0")/../../"
 IMAGE="dotnet-template:e2e"
 CONTAINER="dotnet-template-e2e"
 PORT=19080
+JWT_SECRET_FOR_TESTS="test-secret-key-at-least-32-characters"
+
+# Ensure idempotency if a previous run left a container behind
+docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
 
 # Build production image
 docker build -f docker/build.Dockerfile -t "$IMAGE" .
 
 # Start container
-container_id=$(docker run -d --name "$CONTAINER" -p "${PORT}:8080" "$IMAGE")
+container_id=$(docker run -d --name "$CONTAINER" \
+  -e "Jwt__Secret=${JWT_SECRET_FOR_TESTS}" \
+  -e "Jwt__Issuer=dotnet-template" \
+  -e "Jwt__Audience=dotnet-template" \
+  -p "${PORT}:8080" "$IMAGE")
 trap "docker rm -f $container_id" EXIT
 
 # Wait for the server to be ready
-until curl -sf "http://127.0.0.1:${PORT}/health" > /dev/null; do
+ready=0
+for _ in $(seq 1 60); do
+  if curl -sf "http://127.0.0.1:${PORT}/health" > /dev/null; then
+    ready=1
+    break
+  fi
   sleep 1
 done
+
+if [ "$ready" -ne 1 ]; then
+  echo "Server did not become ready at /health within 60s"
+  docker logs "$container_id" || true
+  exit 1
+fi
 
 # ── health ───────────────────────────────────────────────────────────────────
 echo "Testing /health..."
 curl -fsS "http://127.0.0.1:${PORT}/health" > /dev/null
+
+# ── docs ─────────────────────────────────────────────────────────────────────
+echo "Testing /docs..."
+curl -fsS "http://127.0.0.1:${PORT}/docs" > /dev/null
 
 # ── public ───────────────────────────────────────────────────────────────────
 echo "Testing /v1/public..."
