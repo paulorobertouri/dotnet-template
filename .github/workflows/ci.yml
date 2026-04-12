@@ -50,3 +50,11 @@ jobs:
           Jwt__Issuer: dotnet-template
           Jwt__Audience: dotnet-template
           Jwt__ExpirationSeconds: "3600"
+
+      - name: Docker curl smoke test
+        env:
+          JWT_SECRET: ci-test-secret-key-at-least-32-characters
+          JWT_ISSUER: dotnet-template
+          JWT_AUDIENCE: dotnet-template
+          JWT_EXPIRATION_SECONDS: "3600"
+        run: bash ./scripts/ubuntu/docker-curl-test.sh
