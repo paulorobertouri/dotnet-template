@@ -1,0 +1,39 @@
+# .NET build outputs
+bin/
+obj/
+publish/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+*.DotSettings.user
+
+# Test & coverage
+coverage/
+*.lcov
+*.cobertura.xml
+TestResults/
+
+# Environment / secrets
+.env
+*.env.local
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

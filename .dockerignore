@@ -1,0 +1,32 @@
+# Ignored from Docker build context
+**/bin/
+**/obj/
+
+# Source control
+**/.git/
+**/.github/
+
+# Tests (not needed in the production image)
+tests/
+
+# Scripts
+scripts/
+
+# IDE / OS
+.vs/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Secrets / env
+.env
+*.env.local
+
+# Docs
+*.md
+docs/
+
+# Coverage
+coverage/
+TestResults/

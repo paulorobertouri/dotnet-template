@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore DotnetTemplate.sln
+
+      - name: Format check
+        run: dotnet format DotnetTemplate.sln --verify-no-changes
+
+      - name: Build
+        run: dotnet build DotnetTemplate.sln --no-restore -c Release
+
+      - name: Unit tests
+        run: >
+          dotnet test tests/DotnetTemplate.Tests.Unit/DotnetTemplate.Tests.Unit.csproj
+          --no-build -c Release
+          --logger "console;verbosity=detailed"
+        env:
+          Jwt__Secret: ci-test-secret-key-at-least-32-characters
+
+      - name: Integration tests
+        run: >
+          dotnet test tests/DotnetTemplate.Tests.Integration/DotnetTemplate.Tests.Integration.csproj
+          --no-build -c Release
+          --logger "console;verbosity=detailed"
+        env:
+          Jwt__Secret: ci-test-secret-key-at-least-32-characters
+          Jwt__Issuer: dotnet-template
+          Jwt__Audience: dotnet-template
+          Jwt__ExpirationSeconds: "3600"

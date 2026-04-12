@@ -1,0 +1,13 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/build.Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - Jwt__Secret=${JWT_SECRET}
+      - Jwt__Issuer=${JWT_ISSUER:-dotnet-template}
+      - Jwt__Audience=${JWT_AUDIENCE:-dotnet-template}
+      - Jwt__ExpirationSeconds=${JWT_EXPIRATION_SECONDS:-3600}
+    restart: unless-stopped
