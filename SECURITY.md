@@ -10,10 +10,11 @@
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
 
-Send a private report to: **security@example.com**
+Send a private report to: **<security@example.com>**
 (replace with your project e-mail before publishing)
 
 Include:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
