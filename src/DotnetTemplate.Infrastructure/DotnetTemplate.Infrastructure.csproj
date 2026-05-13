@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotnetTemplate.Domain\DotnetTemplate.Domain.csproj" />
+   <ProjectReference Include="..\DotnetTemplate.Application\DotnetTemplate.Application.csproj" />
   </ItemGroup>
 
 </Project>
