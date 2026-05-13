@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DotnetTemplate.Api/DotnetTemplate.Api.csproj" />
+    <Project Path="src/DotnetTemplate.Application/DotnetTemplate.Application.csproj" />
+    <Project Path="src/DotnetTemplate.Domain/DotnetTemplate.Domain.csproj" />
+    <Project Path="src/DotnetTemplate.Infrastructure/DotnetTemplate.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DotnetTemplate.Tests.Unit/DotnetTemplate.Tests.Unit.csproj" />
+    <Project Path="tests/DotnetTemplate.Tests.Integration/DotnetTemplate.Tests.Integration.csproj" />
+  </Folder>
+</Solution>

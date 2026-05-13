@@ -48,7 +48,7 @@ builder.Services.AddSingleton<IAuthService>(provider =>
                 ?? builder.Configuration["JWT_EXPIRATION_SECONDS"]
                 ?? "3600")));
 
-builder.Services.AddSingleton<ICustomerRepository, InMemoryCustomerRepository>();
+builder.Services.AddSingleton<ICustomerRepository, SQLiteCustomerRepository>();
 builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
 // ── API infrastructure ────────────────────────────────────────────────────────
@@ -62,13 +62,19 @@ app.MapOpenApi();
 app.MapScalarApiReference("/docs");
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "..", "..", "public")),
+    RequestPath = "/static"
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 // Health check (no auth required)
-app.MapGet("/health", () => Results.Ok(new { status = "ok" }))
+app.MapGet("/health", () => Results.Ok(new { status = "ok", version = "1.0.0" }))
     .AllowAnonymous();
 
 app.Run();

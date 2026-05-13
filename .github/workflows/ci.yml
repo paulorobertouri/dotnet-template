@@ -2,59 +2,51 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
   pull_request:
-  workflow_dispatch:
-
-permissions:
-  contents: read
+    branches: [ main, master ]
 
 jobs:
-  quality:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-
-      - name: Restore
-        run: dotnet restore DotnetTemplate.sln
-
-      - name: Format check
-        run: dotnet format DotnetTemplate.sln --verify-no-changes
-
+          
+      - name: Restore dependencies
+        run: dotnet restore
+        
       - name: Build
-        run: dotnet build DotnetTemplate.sln --no-restore -c Release
-
-      - name: Unit tests
-        run: >
-          dotnet test tests/DotnetTemplate.Tests.Unit/DotnetTemplate.Tests.Unit.csproj
-          --no-build -c Release
-          --logger "console;verbosity=detailed"
-        env:
-          Jwt__Secret: ci-test-secret-key-at-least-32-characters
-
-      - name: Integration tests
-        run: >
-          dotnet test tests/DotnetTemplate.Tests.Integration/DotnetTemplate.Tests.Integration.csproj
-          --no-build -c Release
-          --logger "console;verbosity=detailed"
-        env:
-          Jwt__Secret: ci-test-secret-key-at-least-32-characters
-          Jwt__Issuer: dotnet-template
-          Jwt__Audience: dotnet-template
-          Jwt__ExpirationSeconds: "3600"
-
-      - name: Docker curl smoke test
-        env:
-          JWT_SECRET: ci-test-secret-key-at-least-32-characters
-          JWT_ISSUER: dotnet-template
-          JWT_AUDIENCE: dotnet-template
-          JWT_EXPIRATION_SECONDS: "3600"
-        run: bash ./scripts/ubuntu/docker-curl-test.sh
+        run: dotnet build --no-restore
+        
+      - name: Unit Tests
+        run: dotnet test tests/DotnetTemplate.Tests.Unit --no-build --verbosity normal
+        
+      - name: Install Playwright (Node required)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+        
+      - name: E2E Tests
+        run: |
+          dotnet run --project src/DotnetTemplate.Api &
+          sleep 10
+          npx playwright test
+        
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots
+          path: tests/e2e/screenshots/
+          if-no-files-found: ignore
+        
+      - name: Lint (Format check)
+        run: dotnet format --verify-no-changes

@@ -1,13 +1,16 @@
 services:
-  web:
+  app:
     build:
       context: .
       dockerfile: docker/build.Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8080"
+    volumes:
+      - .:/app
     environment:
-      - Jwt__Secret=${JWT_SECRET}
-      - Jwt__Issuer=${JWT_ISSUER:-dotnet-template}
-      - Jwt__Audience=${JWT_AUDIENCE:-dotnet-template}
-      - Jwt__ExpirationSeconds=${JWT_EXPIRATION_SECONDS:-3600}
-    restart: unless-stopped
+      - ASPNETCORE_URLS=http://+:8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

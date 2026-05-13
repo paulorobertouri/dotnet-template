@@ -1,0 +1,27 @@
+{
+  "appName": "dotnet-template",
+  "baseUrl": "http://localhost:8080",
+  "outDir": "Templates/dotnet-template/docs/screenshots/v1",
+  "viewport": { "mobile": { "width": 390, "height": 844 } },
+  "pages": [
+    { "path": "/docs", "slug": "docs", "mobile": true, "fullPage": false },
+    {
+      "path": "/v1/public",
+      "slug": "public",
+      "mobile": true,
+      "fullPage": false
+    },
+    {
+      "path": "/v1/customer",
+      "slug": "customer",
+      "mobile": true,
+      "fullPage": false
+    },
+    {
+      "path": "/v1/auth/login",
+      "slug": "login",
+      "mobile": true,
+      "fullPage": false
+    }
+  ]
+}
