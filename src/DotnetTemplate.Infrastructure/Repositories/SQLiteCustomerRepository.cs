@@ -1,6 +1,6 @@
 using System.Data.SQLite;
 using DotnetTemplate.Domain.Models;
-using DotnetTemplate.Domain.Repositories;
+using DotnetTemplate.Application.Interfaces;
 
 namespace DotnetTemplate.Infrastructure.Repositories;
 
@@ -42,7 +42,29 @@ public class SQLiteCustomerRepository : ICustomerRepository
         }
     }
 
-    public async Task<IEnumerable<Customer>> GetAllAsync()
+    public async Task<Customer?> GetByIdAsync(string id)
+    {
+        using var connection = new SQLiteConnection(_connectionString);
+        await connection.OpenAsync();
+
+        using var command = new SQLiteCommand(
+            "SELECT Id, Name, Email FROM Customers WHERE Id = @Id LIMIT 1",
+            connection);
+        command.Parameters.AddWithValue("@Id", id);
+
+        using var reader = await command.ExecuteReaderAsync();
+        if (!await reader.ReadAsync())
+        {
+            return null;
+        }
+
+        return new Customer(
+            reader.GetInt32(0).ToString(),
+            reader.GetString(1),
+            reader.GetString(2));
+    }
+
+    public async Task<IEnumerable<Customer>> ListAsync()
     {
         var customers = new List<Customer>();
         using var connection = new SQLiteConnection(_connectionString);
@@ -53,12 +75,10 @@ public class SQLiteCustomerRepository : ICustomerRepository
 
         while (await reader.ReadAsync())
         {
-            customers.Add(new Customer
-            {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Email = reader.GetString(2)
-            });
+            customers.Add(new Customer(
+                reader.GetInt32(0).ToString(),
+                reader.GetString(1),
+                reader.GetString(2)));
         }
 
         return customers;
