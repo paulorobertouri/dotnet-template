@@ -1,9 +1,9 @@
 # dotnet-template
 
-> Production-ready .NET 9 Web API template with Clean Architecture, JWT auth, and a full test suite.
+> Production-ready .NET 10 Web API template with Clean Architecture, JWT auth, and a full test suite.
 
 ![CI](https://github.com/your-org/dotnet-template/actions/workflows/ci.yml/badge.svg)
-![.NET](https://img.shields.io/badge/.NET-9.0-512BD4)
+![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## Features
@@ -21,7 +21,7 @@
 
 ## Requirements
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 - Docker & docker compose (optional, for container workflow)
 - `make` (optional, for Makefile shortcuts)
 
