@@ -40,7 +40,7 @@ public sealed class AuthService(
         var handler = new JwtSecurityTokenHandler();
         try
         {
-            handler.ValidateToken(token, new TokenValidationParameters
+            var principal = handler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
@@ -52,8 +52,8 @@ public sealed class AuthService(
                 ClockSkew = TimeSpan.Zero,
             }, out _);
 
-            var jwt = handler.ReadJwtToken(token);
-            return jwt.Subject;
+            return principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+                ?? principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
         catch
         {
