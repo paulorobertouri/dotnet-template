@@ -30,15 +30,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Install Playwright Test Package
+        run: npm install --no-save @playwright/test
           
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        run: npx --yes playwright install --with-deps chromium
         
       - name: E2E Tests
         run: |
           dotnet run --project src/DotnetTemplate.Api &
           sleep 10
-          npx playwright test
+          npx --yes playwright test
         
       - name: Upload screenshots on failure
         if: failure()
