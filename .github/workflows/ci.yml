@@ -11,45 +11,23 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
-          
+          dotnet-version: '10.0.x'
+
       - name: Restore dependencies
         run: dotnet restore
-        
+
       - name: Build
         run: dotnet build --no-restore
-        
+
       - name: Unit Tests
         run: dotnet test tests/DotnetTemplate.Tests.Unit --no-build --verbosity normal
-        
-      - name: Install Playwright (Node required)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
 
-      - name: Install Playwright Test Package
-        run: npm install --no-save @playwright/test
-          
-      - name: Install Playwright Browsers
-        run: npx --yes playwright install --with-deps chromium
-        
-      - name: E2E Tests
-        run: |
-          dotnet run --project src/DotnetTemplate.Api &
-          sleep 10
-          npx --yes playwright test
-        
-      - name: Upload screenshots on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-screenshots
-          path: tests/e2e/screenshots/
-          if-no-files-found: ignore
-        
+      - name: Integration Tests
+        run: dotnet test tests/DotnetTemplate.Tests.Integration --no-build --verbosity normal
+
       - name: Lint (Format check)
         run: dotnet format --verify-no-changes
