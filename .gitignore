@@ -28,6 +28,10 @@ TestResults/
 .DS_Store
 Thumbs.db
 
+# Test results
+playwright-report/
+test-results/
+
 # NuGet
 *.nupkg
 *.snupkg

@@ -19,6 +19,10 @@ scripts/
 .DS_Store
 Thumbs.db
 
+# Test results
+playwright-report/
+test-results/
+
 # Secrets / env
 .env
 *.env.local
