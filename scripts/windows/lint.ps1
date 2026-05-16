@@ -1,7 +1,9 @@
 $ErrorActionPreference = "Stop"
-$ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location "$ScriptDirectory\..\.."
 
-Write-Host "Verifying formatting (no changes allowed)..."
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+
+Set-Location $ProjectRoot
+
+Write-Output "Linting code..."
 dotnet format DotnetTemplate.sln --verify-no-changes
-Write-Host "Lint passed."

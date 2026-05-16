@@ -1,5 +1,8 @@
 $ErrorActionPreference = "Stop"
-$ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location "$ScriptDirectory\..\.."
 
-& .\tests\docker\test_with_curl.ps1
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+
+Set-Location $ProjectRoot
+
+bash tests/docker/test_with_curl.sh

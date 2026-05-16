@@ -1,7 +1,9 @@
 $ErrorActionPreference = "Stop"
-$ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location "$ScriptDirectory\..\.."
 
-Write-Host "Running all tests..."
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+
+Set-Location $ProjectRoot
+
+Write-Output "Running tests..."
 dotnet test DotnetTemplate.sln --logger "console;verbosity=normal"
-Write-Host "All tests passed."

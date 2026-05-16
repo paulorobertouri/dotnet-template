@@ -1,7 +1,9 @@
 $ErrorActionPreference = "Stop"
-$ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location "$ScriptDirectory\..\.."
 
-Write-Host "Applying dotnet format..."
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+
+Set-Location $ProjectRoot
+
+Write-Output "Formatting code..."
 dotnet format DotnetTemplate.sln
-Write-Host "Format applied."

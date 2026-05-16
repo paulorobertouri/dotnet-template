@@ -1,7 +1,9 @@
 $ErrorActionPreference = "Stop"
-$ScriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location "$ScriptDirectory\..\.."
 
-Write-Host "Building solution in Release..."
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
+
+Set-Location $ProjectRoot
+
+Write-Output "Building application..."
 dotnet build DotnetTemplate.sln -c Release
-Write-Host "Build succeeded."

@@ -5,5 +5,5 @@ $ProjectRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
 Set-Location $ProjectRoot
 
-export ASPNETCORE_ENVIRONMENT=Development
-dotnet run --project src/DotnetTemplate.Api/DotnetTemplate.Api.csproj
+Write-Output "Stopping dev server..."
+docker compose down

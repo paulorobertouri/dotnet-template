@@ -2,16 +2,30 @@
 bin/
 obj/
 publish/
+out/
+dist/
+build/
 
 # Visual Studio
 .vs/
+.vscode/
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
+*.VisualState.xml
+*.psess
+*.vsp
+*.vspx
+*.sap
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
 
 # Rider / JetBrains
 .idea/
+.idea_modules/
+*.sln.iml
 *.DotSettings.user
 
 # Test & coverage
@@ -19,13 +33,16 @@ coverage/
 *.lcov
 *.cobertura.xml
 TestResults/
+opencover/
 
 # Environment / secrets
 .env
+.env.local
 *.env.local
 
 # OS artifacts
 .DS_Store
+.AppleDouble
 Thumbs.db
 
 # Test results
@@ -37,7 +54,21 @@ test-results/
 *.snupkg
 .nuget/
 
-# VS Code
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+# Local settings
+launchSettings.json
+
+# Visual Studio Code
+*.code-workspace
+
+# Python (for cross-platform support)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Node (for cross-platform support)
+node_modules/
+
+# Misc
+.turbo/
