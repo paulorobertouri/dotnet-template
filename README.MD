@@ -160,4 +160,4 @@ in all file contents and file names.
 
 ## License
 
-[MIT](LICENSE)
+MIT — see [LICENSE](LICENSE).

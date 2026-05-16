@@ -31,3 +31,35 @@ jobs:
 
       - name: Lint (Format check)
         run: dotnet format --verify-no-changes
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: E2E Tests
+        run: |
+          Jwt__Secret="test-secret-key-at-least-32-characters!!" \
+            dotnet run --project src/DotnetTemplate.Api --no-build &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8080/health > /dev/null; then
+              break
+            fi
+
+            if [[ "$i" -eq 30 ]]; then
+              echo "Server did not become ready in time" >&2
+              exit 1
+            fi
+
+            sleep 1
+          done
+
+          npx playwright test tests/e2e/client.spec.ts
