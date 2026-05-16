@@ -116,17 +116,6 @@ make docker-curl-test   # runs tests/docker/test_with_curl.sh
 docker compose down
 ```
 
-### Screenshots
-
-Use the shared screenshot helper to regenerate the docs images:
-
-```bash
-bash Scripts/ubuntu/screenshots-generic.sh \
-  --config Templates/dotnet-template/docs/screenshot-config.json
-```
-
-The generated files land in `Templates/dotnet-template/docs/screenshots/v1`.
-
 ## Project Structure
 
 ```text
